@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Interactive Tabs</title>
+    <style>
+        :root {
+            --bg-color: #f5f5f5;
+            --container-bg: white;
+            --nav-bg: #e9ecef;
+            --border-color: #dee2e6;
+            --text-color: #495057;
+            --text-dark: #212529;
+            --primary-color: #007bff;
+            --hover-bg: #dee2e6;
+        }
+
+        [data-theme="dark"] {
+            --bg-color: #1a1a1a;
+            --container-bg: #2d2d2d;
+            --nav-bg: #404040;
+            --border-color: #555;
+            --text-color: #e2e8f0;
+            --text-dark: #ffffff;
+            --primary-color: #4dabf7;
+            --hover-bg: #555;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            transition: background-color 0.3s ease, color 0.3s ease;
+        }
+
+        .theme-toggle {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: var(--primary-color);
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            font-size: 1.2rem;
+            cursor: pointer;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+            transition: all 0.3s ease;
+            z-index: 1000;
+        }
+
+        .theme-toggle:hover {
+            transform: scale(1.1);
+        }
+
+        .tabs-container {
+            max-width: 800px;
+            margin: 0 auto;
+            background-color: var(--container-bg);
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            overflow: hidden;
+            transition: background-color 0.3s ease;
+        }
+        .tabs-nav {
+            display: flex;
+            background-color: var(--nav-bg);
+            border-bottom: 1px solid var(--border-color);
+            transition: background-color 0.3s ease;
+        }
+        .tab-button {
+            background: none;
+            border: none;
+            padding: 15px 20px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: 500;
+            color: var(--text-color);
+            transition: all 0.3s ease;
+            border-bottom: 3px solid transparent;
+            flex: 1;
+        }
+        .tab-button:hover {
+            background-color: var(--hover-bg);
+            color: var(--text-dark);
+        }
+        .tab-button:focus {
+            outline: 2px solid var(--primary-color);
+            outline-offset: -2px;
+        }
+        .tab-button.active {
+            background-color: var(--container-bg);
+            color: var(--primary-color);
+            border-bottom-color: var(--primary-color);
+        }
+        .tab-content {
+            padding: 30px;
+            min-height: 200px;
+            line-height: 1.6;
+            color: var(--text-dark);
+            background-color: var(--container-bg);
+        }
+        .tab-panel {
+            display: none;
+        }
+        .tab-panel.active {
+            display: block;
+            animation: fadeIn 0.3s ease-in;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        @media (max-width: 600px) {
+            .tabs-nav {
+                flex-direction: column;
+            }
+            .tab-button {
+                text-align: left;
+            }
+        }
+    </style>
+</head>
+<body>
+    <button class="theme-toggle" onclick="toggleTheme()" aria-label="Toggle theme">
+        <span class="theme-icon">🌙</span>
+    </button>
+
+    <div class="tabs-container">
+        <div class="tabs-nav" role="tablist">
+            <button class="tab-button active" role="tab" aria-selected="true" aria-controls="panel-1" id="tab-1" onclick="switchTab(event, 'panel-1')">Tab 1</button>
+            <button class="tab-button" role="tab" aria-selected="false" aria-controls="panel-1756820563311" id="tab-1756820563311" onclick="switchTab(event, 'panel-1756820563311')">Tab 2</button>
+            <button class="tab-button" role="tab" aria-selected="false" aria-controls="panel-1756820578470" id="tab-1756820578470" onclick="switchTab(event, 'panel-1756820578470')">Tab 3</button>
+            <button class="tab-button" role="tab" aria-selected="false" aria-controls="panel-1756820592736" id="tab-1756820592736" onclick="switchTab(event, 'panel-1756820592736')">Tab 4</button>
+        </div>
+        <div class="tab-content">
+            <div id="panel-1" class="tab-panel active" role="tabpanel" aria-labelledby="tab-1">
+                <p>This is the content for tab 1</p>
+            </div>
+            <div id="panel-1756820563311" class="tab-panel" role="tabpanel" aria-labelledby="tab-1756820563311">
+                <p>This is the content for tab 2</p>
+            </div>
+            <div id="panel-1756820578470" class="tab-panel" role="tabpanel" aria-labelledby="tab-1756820578470">
+                <p>This is the content for tab 3</p>
+            </div>
+            <div id="panel-1756820592736" class="tab-panel" role="tabpanel" aria-labelledby="tab-1756820592736">
+                <p>This is the content for tab 4</p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function switchTab(event, panelId) {
+            const tabButtons = document.querySelectorAll('.tab-button');
+            const tabPanels = document.querySelectorAll('.tab-panel');
+            
+            tabButtons.forEach(button => {
+                button.classList.remove('active');
+                button.setAttribute('aria-selected', 'false');
+            });
+            
+            tabPanels.forEach(panel => {
+                panel.classList.remove('active');
+            });
+            
+            event.target.classList.add('active');
+            event.target.setAttribute('aria-selected', 'true');
+            document.getElementById(panelId).classList.add('active');
+        }
+
+        function toggleTheme() {
+            const html = document.documentElement;
+            const currentTheme = html.getAttribute('data-theme');
+            const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+            html.setAttribute('data-theme', newTheme);
+            
+            const themeIcon = document.querySelector('.theme-icon');
+            themeIcon.textContent = newTheme === 'dark' ? '☀️' : '🌙';
+            
+            try {
+                localStorage.setItem('theme', newTheme);
+            } catch (e) {
+                console.log('LocalStorage not available');
+            }
+        }
+
+        // Initialize theme
+        function initializeTheme() {
+            try {
+                const savedTheme = localStorage.getItem('theme') || 
+                    (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+                document.documentElement.setAttribute('data-theme', savedTheme);
+                const themeIcon = document.querySelector('.theme-icon');
+                themeIcon.textContent = savedTheme === 'dark' ? '☀️' : '🌙';
+            } catch (e) {
+                console.log('Theme initialization failed');
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', initializeTheme);
+
+        document.addEventListener('keydown', function(event) {
+            const activeTab = document.querySelector('.tab-button.active');
+            if (!activeTab) return;
+            
+            const tabButtons = Array.from(document.querySelectorAll('.tab-button'));
+            const currentIndex = tabButtons.indexOf(activeTab);
+            
+            if (event.key === 'ArrowRight' || event.key === 'ArrowLeft') {
+                event.preventDefault();
+                const nextIndex = event.key === 'ArrowRight' 
+                    ? (currentIndex + 1) % tabButtons.length 
+                    : (currentIndex - 1 + tabButtons.length) % tabButtons.length;
+                
+                tabButtons[nextIndex].click();
+                tabButtons[nextIndex].focus();
+            }
+        });
+    </script>
+</body>
+</html>

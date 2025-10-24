@@ -1,0 +1,16 @@
+version: '3.8'
+
+services:
+  db:
+    image: postgres:15-alpine
+    environment:
+      - POSTGRES_USER=escaperoom
+      - POSTGRES_PASSWORD=password123
+      - POSTGRES_DB=escaperoom_db
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    ports:
+      - "5433:5432"  # Changed to 5433 to avoid conflict
+
+volumes:
+  postgres_data:

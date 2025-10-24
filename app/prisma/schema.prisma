@@ -1,0 +1,35 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Solution {
+  id        String   @id @default(uuid())
+  stageId   Int
+  code      String   @db.Text
+  isCorrect Boolean  @default(false)
+  timeSpent Int      // seconds
+  userId    String   @default("anonymous")
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([userId])
+  @@index([stageId])
+}
+
+model GameSession {
+  id            String   @id @default(uuid())
+  userId        String
+  startTime     DateTime @default(now())
+  endTime       DateTime?
+  totalTime     Int?     // seconds
+  stagesCompleted Int    @default(0)
+  isCompleted   Boolean  @default(false)
+  score         Int      @default(0)
+
+  @@index([userId])
+}
